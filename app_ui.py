@@ -10,6 +10,8 @@ class App(Tk):
         super().__init__()
         self.columnconfigure([0, 1], weight=1, minsize=75)
         self.rowconfigure(0, weight=1, minsize=50)
+        self.wm_minsize(250, 50)
+        self.title("Hotel database")
         self.db = None
         self.btn_connection = Button(self, text="Connect", command=self.on_connection_click)
         self.btn_connection.pack()

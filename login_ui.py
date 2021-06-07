@@ -5,6 +5,9 @@ class Login(Toplevel):
     def __init__(self, app=None, parent=None):
         super().__init__(parent)
         self.app = app
+        self.title("Login")
+        self.wm_minsize(290, 215)
+        self.wm_maxsize(290, 215)
 
         frm_form = Frame(self, relief=SUNKEN, borderwidth=3)
         frm_form.pack()
