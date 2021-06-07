@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter.filedialog import askopenfilename
 
 
 class Login(Toplevel):
@@ -51,6 +52,7 @@ class Login(Toplevel):
         self.lbl_structure.pack()
         self.ent_structure = Entry(master=frame2)
         self.ent_structure.pack(pady=8)
+        self.ent_structure.bind("<Button-1>", self.on_structure_click)
 
         frm_buttons = Frame(self)
         frm_buttons.pack(fill=X, ipadx=5, ipady=5)
@@ -63,6 +65,15 @@ class Login(Toplevel):
 
     def out(self):
         self.destroy()
+
+    def on_structure_click(self, event):
+        if self.ent_structure.get() == "":
+            filepath = askopenfilename(
+                filetypes=[("SQL Files", "*.sql"), ("All Files", "*.*")]
+            )
+            if not filepath:
+                return
+            self.ent_structure.insert(END, filepath)
 
     def on_connect_click(self):
         host = self.ent_host.get()

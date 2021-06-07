@@ -39,10 +39,9 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def init_structure(self):
-        f = open(self.structure_file)
-        if self.cursor is not None:
-            self.cursor.execute(f.read())
-        f.close()
+        with open(self.structure_file) as f:
+            if self.cursor is not None:
+                self.cursor.execute(f.read())
 
     def drop(self):
         if self.connection is not None:
