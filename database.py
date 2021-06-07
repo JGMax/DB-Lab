@@ -5,6 +5,7 @@ from psycopg2 import sql
 
 class Database:
     def __init__(self, host, name, port, login, password, structure_file):
+        self.is_connected = False
         self.structure_file = structure_file
         self.name = name
         self.password = password
@@ -25,21 +26,34 @@ class Database:
         cursor = connection.cursor()
         cursor.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s", (self.name, ))
         if not cursor.fetchone():
-            cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.name)))
-            connection.close()
-            self.connect()
-            self.init_structure()
+            if self.test_file():
+                cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.name)))
+                connection.close()
+                self.connect()
+                self.is_connected = True
+            else:
+                self.is_connected = False
+                self.disconnect()
         else:
             connection.close()
             self.connect()
+            self.init_structure()
 
     def connect(self):
         self.connection = psycopg2.connect(self.conn_str)
         self.connection.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
         self.cursor = self.connection.cursor()
 
+    def test_file(self):
+        try:
+            with open(self.structure_file, encoding='utf-8'):
+                return True
+        except IOError as e:
+            print(str(e))
+            return False
+
     def init_structure(self):
-        with open(self.structure_file) as f:
+        with open(self.structure_file, encoding='utf-8') as f:
             if self.cursor is not None:
                 self.cursor.execute(f.read())
 
@@ -56,5 +70,8 @@ class Database:
     def disconnect(self):
         if self.connection is not None:
             self.connection.close()
-            del self
+        del self
+
+    def clear_all(self):
+        pass
 
