@@ -1,3 +1,5 @@
+import json
+
 import psycopg2
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 from psycopg2 import sql
@@ -5,7 +7,6 @@ from psycopg2 import sql
 
 class Database:
     def __init__(self, host, name, port, login, password, structure_file):
-        self.is_connected = False
         self.structure_file = structure_file
         self.name = name
         self.password = password
@@ -26,18 +27,12 @@ class Database:
         cursor = connection.cursor()
         cursor.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s", (self.name, ))
         if not cursor.fetchone():
-            if self.test_file():
-                cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.name)))
-                connection.close()
-                self.connect()
-                self.is_connected = True
-            else:
-                self.is_connected = False
-                self.disconnect()
+            cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.name)))
+            connection.close()
+            self.connect()
         else:
             connection.close()
             self.connect()
-            self.init_structure()
 
     def connect(self):
         self.connection = psycopg2.connect(self.conn_str)
@@ -75,3 +70,24 @@ class Database:
     def clear_all(self):
         pass
 
+    def get_rooms(self):
+        self.cursor.callproc("get_rooms")
+        return json.loads(str(self.cursor.fetchone()[0]).replace("'", '"'))
+
+    def clear_rooms(self):
+        pass
+
+    def search_room(self, target):
+        pass
+
+    def delete_room(self, target):
+        pass
+
+    def add_room(self, number, price):
+        pass
+
+    def update_item_room(self, id, changing_column, new_value):
+        pass
+
+    def delete_item_room(self, id):
+        pass

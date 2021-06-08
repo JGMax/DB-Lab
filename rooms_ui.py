@@ -4,12 +4,16 @@ from table import Table
 
 
 class Rooms(Frame):
-    def __init__(self, parent=None):
+    def __init__(self, dba, parent=None):
         super().__init__(parent)
-        #  todo get headings + update table
+
+        #  todo update table
         #  todo click listeners
-        #  todo add clear table button
-        self.table = Table(self, ["aaa", "gg"], ["fa","f","f","f","f","f","f","f","f","f","a","f","f"])
+
+        self.dba = dba
+        self.btn_clear = Button(self, text="Clear table")
+        self.btn_clear.pack(side=RIGHT, pady=5, padx=10)
+        self.table = Table(self, dba.rooms_headings)
         self.table.pack(side=BOTTOM, pady=10, padx=10)
 
         self.left_frame = Frame(self)
@@ -22,12 +26,12 @@ class Rooms(Frame):
 
         self.btn_delete = Button(self.left_frame, text="Delete")
         self.btn_delete.pack(side=LEFT)
-        self.left_frame.pack(side=RIGHT, padx=16)
+        self.left_frame.pack(side=LEFT, padx=16)
 
         self.right_frame = Frame(self)
 
         self.btn_add = Button(self.right_frame, text="Add")
-        self.btn_add.pack(side=BOTTOM)
+        self.btn_add.pack(side=BOTTOM, ipadx=56)
 
         self.price_frame = Frame(self.right_frame)
         self.lbl_price = Label(self.price_frame, text="Price per night")
@@ -44,4 +48,3 @@ class Rooms(Frame):
         self.room_frame.pack(side=RIGHT, pady=10, padx=10)
 
         self.right_frame.pack(side=RIGHT, padx=16)
-
