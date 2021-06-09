@@ -83,7 +83,7 @@ class Database:
     def delete_room(self, target):
         pass
 
-    def add_room(self, number, price):
+    def add_room(self, room, price):
         pass
 
     def update_item_room(self, id, changing_column, new_value):

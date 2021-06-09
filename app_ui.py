@@ -37,6 +37,8 @@ class App(Tk):
             self.error("Database is disconnected")
             return
         self.db.drop()
+        self.btn_connection["text"] = "Connect"
+        self.db = None
 
     def on_clear_all_click(self):
         if self.db is None:
@@ -67,7 +69,8 @@ class App(Tk):
             return False
         try:
             self.db = Database(host, name, port, login, password, s_file)
-            # todo set table
+            self.rooms.update_table(self.db.get_rooms())
+            # todo update orders
             self.btn_connection["text"] = "Disconnect"
             return True
         except Exception as e:
@@ -82,27 +85,48 @@ class App(Tk):
     def get_rooms(self):
         if self.db is not None:
             return self.db.get_rooms()
+        else:
+            self.error("Database is disconnected")
+            return None
 
     def clear_rooms(self):
         if self.db is not None:
             return self.db.clear_rooms()
+        else:
+            self.error("Database is disconnected")
+            return None
 
     def search_room(self, target):
         if self.db is not None:
             return self.db.search_room(target)
+        else:
+            self.error("Database is disconnected")
+            return None
 
     def delete_room(self, target):
         if self.db is not None:
             return self.db.search_room(target)
+        else:
+            self.error("Database is disconnected")
+            return None
 
-    def add_room(self, number, price):
+    def add_room(self, room, price):
         if self.db is not None:
-            return self.db.add_room(number, price)
+            return self.db.add_room(room, price)
+        else:
+            self.error("Database is disconnected")
+            return None
 
     def update_item_room(self, id, changing_column, new_value):
         if self.db is not None:
             return self.db.update_item_room(id, changing_column, new_value)
+        else:
+            self.error("Database is disconnected")
+            return None
 
     def delete_item_room(self, id):
         if self.db is not None:
             return self.db.delete_item_room(id)
+        else:
+            self.error("Database is disconnected")
+            return None

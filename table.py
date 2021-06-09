@@ -3,6 +3,8 @@ from tkinter import ttk
 
 
 class Table:
+    # todo update table
+    # todo popup menu listeners
     def __init__(self, parent, headings=tuple(), rows=tuple()):
         table = ttk.Treeview(parent, show="headings", selectmode="browse")
         table["columns"] = headings
@@ -49,3 +51,8 @@ class Table:
 
     def pack(self, *args, **kwargs):
         self.table.pack(*args, **kwargs)
+
+    def update_table(self, data):
+        for i, val in enumerate(data):
+            data[i] = list(val.values())
+        print(data)
