@@ -5,6 +5,7 @@ from database import Database
 from edit_ui import Edit
 from error_ui import Error
 from login_ui import Login
+from orders_ui import Orders
 from rooms_ui import Rooms
 
 
@@ -12,7 +13,9 @@ class App(Tk):
     def __init__(self):
         super().__init__()
         # todo add orders frame
-        self.rooms_headings = ["id", "room_number", "night_price"]
+        self.rooms_headings = ["id", "room_number", "night_cost"]
+        self.orders_headings = ["id", "room_id", "night_count", "arrival_time", "total_cost"]
+
         self.columnconfigure([0, 1], weight=1, minsize=75)
         self.rowconfigure(0, weight=1, minsize=50)
         self.wm_minsize(250, 50)
@@ -21,7 +24,7 @@ class App(Tk):
 
         self.note = Notebook(self)
         self.rooms = Rooms(dba=self, parent=self.note)
-        self.orders = Frame(self.note)
+        self.orders = Orders(dba=self, parent=self.note)
         self.note.add(self.rooms, text="Rooms")
         self.note.add(self.orders, text="Orders")
         self.note.pack()
@@ -71,7 +74,7 @@ class App(Tk):
         try:
             self.db = Database(host, name, port, login, password, s_file)
             self.rooms.update_table(self.db.get_rooms())
-            # todo update orders
+            self.orders.update_table(self.db.get_orders())
             self.btn_connection["text"] = "Disconnect"
             return True
         except Exception as e:
@@ -85,49 +88,120 @@ class App(Tk):
 
     def get_rooms(self):
         if self.db is not None:
-            return self.db.get_rooms()
+            try:
+                return self.db.get_rooms()
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def get_orders(self):
+        if self.db is not None:
+            try:
+                return self.db.get_orders()
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
     def clear_rooms(self):
         if self.db is not None:
-            return self.db.clear_rooms()
+            try:
+                return self.db.clear_rooms()
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def clear_orders(self):
+        if self.db is not None:
+            try:
+                return self.db.clear_orders()
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
     def search_room(self, target):
         if self.db is not None:
-            return self.db.search_room(target)
+            try:
+                return self.db.search_room(target)
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def search_orders(self, target):
+        if self.db is not None:
+            try:
+                return self.db.search_orders(target)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
     def delete_room(self, target):
         if self.db is not None:
-            return self.db.search_room(target)
+            try:
+                return self.db.search_room(target)
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def delete_orders(self, target):
+        if self.db is not None:
+            try:
+                return self.db.delete_orders(target)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
     def add_room(self, room, price):
         if self.db is not None:
-            return self.db.add_room(room, price)
+            try:
+                return self.db.add_room(room, price)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
-    def update_item_room(self, id, changing_column, new_value):
+    def add_orders(self, room_id, night_count):
         if self.db is not None:
-            return self.db.edit_item_room(id, changing_column, new_value)
+            try:
+                return self.db.add_orders(room_id, night_count)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
     def delete_item_room(self, id):
         if self.db is not None:
-            return self.db.delete_item_room(id)
+            try:
+                return self.db.delete_item_room(id)
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def delete_item_orders(self, id):
+        if self.db is not None:
+            try:
+                return self.db.delete_item_orders(id)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
@@ -142,8 +216,20 @@ class App(Tk):
 
     def update_values_room(self, new_values):
         if self.db is not None:
-            return self.db.update_item_room(new_values)
+            try:
+                return self.db.update_item_room(new_values)
+            except Exception as e:
+                self.error(str(e))
         else:
             self.error("Database is disconnected")
             return None
 
+    def update_values_orders(self, new_values):
+        if self.db is not None:
+            try:
+                return self.db.update_item_orders(new_values)
+            except Exception as e:
+                self.error(str(e))
+        else:
+            self.error("Database is disconnected")
+            return None

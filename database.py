@@ -87,14 +87,42 @@ class Database:
         print("Delete room " + target)
         return None
 
-    def add_room(self, room, price):
-        print("Add room " + room + " " + str(price))
+    def add_room(self, room, night_cost):
+        print("Add room " + room + " " + str(night_cost))
         return None
 
     def update_item_room(self, new_data):
-        print("Item updated " + str(new_data))
+        print("Item updated room " + str(new_data))
         return None
 
     def delete_item_room(self, id):
-        print("delete item " + id)
+        print("delete item room " + id)
+        return None
+
+    def get_orders(self):
+        self.cursor.callproc("get_orders")
+        return json.loads(str(self.cursor.fetchone()[0]).replace("'", '"'))
+
+    def clear_orders(self):
+        print("Clear orders")
+        return None
+
+    def search_orders(self, target):
+        print("Search orders " + target)
+        return None
+
+    def delete_orders(self, target):
+        print("Delete orders " + target)
+        return None
+
+    def add_orders(self, room_id, nights):
+        print("Add orders " + room_id + " " + str(nights))
+        return None
+
+    def update_item_orders(self, new_data):
+        print("Item updated orders " + str(new_data))
+        return None
+
+    def delete_item_orders(self, id):
+        print("delete item orders " + id)
         return None

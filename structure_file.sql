@@ -14,6 +14,7 @@ CREATE TABLE orders (
 	total_cost INTEGER NOT NULL CHECK(total_cost >= 0)
 );
 CREATE UNIQUE INDEX room_number_idx ON rooms(room_number);
+CREATE INDEX room_id_idx ON orders(room_id);
 	
 $$ LANGUAGE SQL;
 
@@ -50,6 +51,20 @@ BEGIN
   'room_number', rooms.room_number,
   'night_cost', rooms.night_cost
   )) FROM rooms);
+END
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION get_orders()
+RETURNS JSON AS
+$$
+BEGIN
+  RETURN (SELECT json_agg(json_build_object(
+  	'id', orders.id,
+	'room_id', orders.room_id,
+	'night_count', orders.night_count,
+	'arrival_time', orders.arrival_time,
+	'total_cost', orders.total_cost
+  )) FROM orders);
 END
 $$ LANGUAGE plpgsql;
 

@@ -3,8 +3,6 @@ from tkinter import ttk
 
 
 class Table:
-    # todo update table
-    # todo popup menu listeners
     def __init__(self, parent, headings=tuple(), rows=tuple()):
         table = ttk.Treeview(parent, show="headings", selectmode="browse")
         table["columns"] = headings
@@ -17,7 +15,7 @@ class Table:
         for head in headings:
             table.heading(head, text=head, anchor=CENTER)
             table.column(head, anchor=CENTER)
-            if head != 'id':
+            if head != 'id' and head != "total_cost":
                 self.popup.add_radiobutton(label="Edit " + head, command=self.edit, value=head,
                                            variable=self.selection)
 
@@ -41,11 +39,10 @@ class Table:
             self.popup.grab_release()
 
     def delete(self):
-        self.parent.delete_item_room(self.popup.selection["id"])
+        self.parent.delete_item(self.popup.selection["id"])
 
     def edit(self, *args):
-        #  todo edit field + update db
-        self.parent.edit_item_room(self.selection.get(), self.popup.selection)
+        self.parent.edit_item(self.selection.get(), self.popup.selection)
 
     def pack(self, *args, **kwargs):
         self.table.pack(*args, **kwargs)
