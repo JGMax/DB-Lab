@@ -48,7 +48,12 @@ class App(Tk):
         if self.db is None:
             self.error("Database is disconnected")
             return
-        self.db.clear_all()
+        try:
+            self.db.clear_all()
+            self.rooms.update_table(self.db.get_rooms())
+            self.orders.update_table(self.db.get_orders())
+        except Exception as e:
+            self.error(str(e))
 
     def on_connection_click(self):
         if self.db is not None:

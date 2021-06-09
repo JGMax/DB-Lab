@@ -10,6 +10,9 @@ class Orders(Frame):
         self.dba = dba
         self.btn_clear = Button(self, text="Clear table", command=self.on_clear_table_click)
         self.btn_clear.pack(side=RIGHT, pady=5, padx=10)
+        self.btn_show = Button(self, text="Show table", command=self.on_show_table_click)
+        self.btn_show.pack(side=RIGHT, pady=5, padx=10)
+
         self.table = Table(self, dba.orders_headings)
         self.table.pack(side=BOTTOM, pady=10, padx=10)
 
@@ -44,6 +47,9 @@ class Orders(Frame):
         self.room_frame.pack(side=RIGHT, pady=10, padx=10)
 
         self.right_frame.pack(side=RIGHT, padx=16)
+
+    def on_show_table_click(self):
+        self.update_table(self.dba.get_orders())
 
     def delete_item(self, id):
         self.update_table(self.dba.delete_item_orders(id))
