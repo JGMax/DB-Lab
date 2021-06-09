@@ -45,6 +45,15 @@ class Rooms(Frame):
 
         self.right_frame.pack(side=RIGHT, padx=16)
 
+    def delete_item_room(self, id):
+        self.update_table(self.dba.delete_item_room(id))
+
+    def edit_item_room(self, type, values):
+        self.dba.edit(type, values, self)
+
+    def update_item(self, new_values):
+        self.update_table(self.dba.update_values_room(new_values))
+
     def update_table(self, data):
         if data is not None:
             self.table.update_table(data)

@@ -17,10 +17,11 @@ class Table:
         for head in headings:
             table.heading(head, text=head, anchor=CENTER)
             table.column(head, anchor=CENTER)
-            self.popup.add_radiobutton(label="Edit " + head, command=self.edit, value=head,
-                                       variable=self.selection)
+            if head != 'id':
+                self.popup.add_radiobutton(label="Edit " + head, command=self.edit, value=head,
+                                           variable=self.selection)
 
-        self.popup.add_command(label="Delete", command=self.edit)
+        self.popup.add_command(label="Delete", command=self.delete)
 
         for row in rows:
             table.insert('', END, values=tuple(row))
@@ -40,19 +41,16 @@ class Table:
             self.popup.grab_release()
 
     def delete(self):
-        #  todo delete row + update db
-        for selection in self.table.selection():
-            print(str(selection))
+        self.parent.delete_item_room(self.popup.selection["id"])
 
     def edit(self, *args):
         #  todo edit field + update db
-        print(self.selection.get())
-        print(self.popup.selection)
+        self.parent.edit_item_room(self.selection.get(), self.popup.selection)
 
     def pack(self, *args, **kwargs):
         self.table.pack(*args, **kwargs)
 
     def update_table(self, data):
+        self.table.delete(*self.table.get_children())
         for i, val in enumerate(data):
-            data[i] = list(val.values())
-        print(data)
+            self.table.insert('', END, values=tuple(val.values()))

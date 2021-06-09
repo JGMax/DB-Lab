@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter.ttk import Notebook
 
 from database import Database
+from edit_ui import Edit
 from error_ui import Error
 from login_ui import Login
 from rooms_ui import Rooms
@@ -119,7 +120,7 @@ class App(Tk):
 
     def update_item_room(self, id, changing_column, new_value):
         if self.db is not None:
-            return self.db.update_item_room(id, changing_column, new_value)
+            return self.db.edit_item_room(id, changing_column, new_value)
         else:
             self.error("Database is disconnected")
             return None
@@ -130,3 +131,19 @@ class App(Tk):
         else:
             self.error("Database is disconnected")
             return None
+
+    def edit(self, data_type, values, parent_tab):
+        if self.db is not None:
+            edit = Edit(edit_type=data_type, old_values=values, parent_tab=parent_tab, parent=self)
+            edit.grab_set()
+        else:
+            self.error("Database is disconnected")
+            return None
+
+    def update_values_room(self, new_values):
+        if self.db is not None:
+            return self.db.update_item_room(new_values)
+        else:
+            self.error("Database is disconnected")
+            return None
+

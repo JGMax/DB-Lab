@@ -68,26 +68,33 @@ class Database:
         del self
 
     def clear_all(self):
-        pass
+        print("Clear all")
+        return None
 
     def get_rooms(self):
         self.cursor.callproc("get_rooms")
         return json.loads(str(self.cursor.fetchone()[0]).replace("'", '"'))
 
     def clear_rooms(self):
-        pass
+        print("Clear room")
+        return None
 
     def search_room(self, target):
-        pass
+        print("Search room " + target)
+        return None
 
     def delete_room(self, target):
-        pass
+        print("Delete room " + target)
+        return None
 
     def add_room(self, room, price):
-        pass
+        print("Add room " + room + " " + str(price))
+        return None
 
-    def update_item_room(self, id, changing_column, new_value):
-        pass
+    def update_item_room(self, new_data):
+        print("Item updated " + str(new_data))
+        return None
 
     def delete_item_room(self, id):
-        pass
+        print("delete item " + id)
+        return None
