@@ -9,7 +9,7 @@ CREATE TABLE rooms (
 CREATE TABLE orders (
 	id SMALLSERIAL NOT NULL PRIMARY KEY,
 	room_id SMALLINT REFERENCES rooms(id) ON DELETE CASCADE,
-	night_count INTEGER NOT NULL CHECK(night_count >= 0),
+	night_count SMALLINT NOT NULL CHECK(night_count >= 0),
 	arrival_time TIMESTAMP NOT NULL DEFAULT current_timestamp(0),
 	total_cost INTEGER CHECK(total_cost >= 0) DEFAULT 0
 );
