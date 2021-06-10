@@ -122,33 +122,37 @@ BEGIN
 	INSERT INTO rooms(room_number, night_cost)
 	VALUES (room_number_, night_cost_);
 END
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION add_order(in room_id_ integer, in night_count_ integer) RETURNS void AS $$
 BEGIN
 	INSERT INTO orders(room_id, night_count)
 	VALUES (room_id_, night_count_);
 END
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_room(in room_id integer, in room_number_ VARCHAR(4), in night_cost_ integer) RETURNS void AS $$
 BEGIN
 	UPDATE rooms SET(room_number, night_cost)=(room_number_, night_cost_)
 	WHERE rooms.id = room_id;
 END
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
 
 CREATE OR REPLACE FUNCTION update_order(in order_id_ integer, in room_id_ integer, in arrival_time_ TIMESTAMP, in night_count_ integer) RETURNS void AS $$
 BEGIN
 	UPDATE orders SET(room_id, arrival_time, night_count)=(room_id_, arrival_time_ , night_count_)
 	WHERE orders.id = order_id_;
 END
-$$ LANGUAGE 'plpgsql';
+$$ LANGUAGE plpgsql;
+
+CREATE OR REPLACE FUNCTION clear_orders_tables() RETURNS void AS $$
+	TRUNCATE orders;
+$$ LANGUAGE SQL;
+
+CREATE OR REPLACE FUNCTION delete_orders_by_room(in room VARCHAR(4)) RETURNS void AS $$
+BEGIN
+	DELETE FROM orders WHERE orders.room_id=(SELECT id FROM rooms WHERE room_number = room);
+END
+$$ LANGUAGE plpgsql;
 
 --------------------------------------------------------------
-
-INSERT INTO rooms(room_number, night_cost)
-VALUES ('N001', 150), ('N002', 300), ('N003', 400);
-
-INSERT INTO orders(room_id, arrival_time, night_count, total_cost)
-VALUES (1, '2004-10-19T10:23:54', 10, 0), (2, '2004-10-19 10:23:54', 20, 0)

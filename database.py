@@ -104,8 +104,7 @@ class Database:
             return json.loads(str(fetch).replace("'", '"'))
 
     def clear_orders(self):
-        print("Clear orders")
-        return None
+        self.cursor.callproc("clear_orders_tables")
 
     def search_orders(self, target):
         self.cursor.callproc("get_orders_by_room", (target, ))
@@ -114,8 +113,7 @@ class Database:
             return json.loads(str(fetch).replace("'", '"'))
 
     def delete_orders(self, target):
-        print("Delete orders " + target)
-        return None
+        self.cursor.callproc("delete_orders_by_room", (target, ))
 
     def add_orders(self, room_id, nights):
         self.cursor.callproc("add_order", (room_id, nights, ))
