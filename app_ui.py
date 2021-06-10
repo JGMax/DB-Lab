@@ -12,7 +12,6 @@ from rooms_ui import Rooms
 class App(Tk):
     def __init__(self):
         super().__init__()
-        # todo add orders frame
         self.rooms_headings = ["id", "room_number", "night_cost"]
         self.orders_headings = ["id", "room_id", "night_count", "arrival_time", "total_cost"]
 
