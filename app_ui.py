@@ -17,7 +17,8 @@ class App(Tk):
 
         self.columnconfigure([0, 1], weight=1, minsize=75)
         self.rowconfigure(0, weight=1, minsize=50)
-        self.wm_minsize(250, 50)
+        self.wm_minsize(1220, 405)
+        self.wm_maxsize(1220, 405)
         self.title("Hotel database")
         self.db = None
 
