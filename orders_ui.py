@@ -10,14 +10,14 @@ class Orders(Frame):
         self.dba = dba
         self.btn_clear = Button(self, text="Clear table", command=self.on_clear_table_click)
         self.btn_clear.pack(side=RIGHT, pady=5, padx=10)
-        self.btn_show = Button(self, text="Show table", command=self.on_show_table_click)
+        self.btn_show = Button(self, text="Refresh table", command=self.on_show_table_click)
         self.btn_show.pack(side=RIGHT, pady=5, padx=10)
 
         self.table = Table(self, dba.orders_headings)
         self.table.pack(side=BOTTOM, pady=10, padx=10)
 
         self.left_frame = Frame(self)
-        self.lbl_search = Label(self.left_frame, text="Enter room id")
+        self.lbl_search = Label(self.left_frame, text="Enter room")
         self.lbl_search.pack()
         self.ent_search = Entry(self.left_frame)
         self.ent_search.pack(pady=10)
@@ -52,20 +52,19 @@ class Orders(Frame):
         self.update_table(self.dba.get_orders())
 
     def delete_item(self, id):
-        self.update_table(self.dba.delete_item_orders(id))
+        self.dba.delete_item_orders(id)
 
     def edit_item(self, type, values):
         self.dba.edit(type, values, self)
 
     def update_item(self, new_values):
-        self.update_table(self.dba.update_values_orders(new_values))
+        self.dba.update_values_orders(new_values)
 
     def update_table(self, data):
-        if data is not None:
-            self.table.update_table(data)
+        self.table.update_table(data)
 
     def on_clear_table_click(self):
-        self.update_table(self.dba.clear_orders())
+        self.dba.clear_orders()
 
     def on_search_click(self):
         target = self.ent_search.get()
@@ -77,7 +76,7 @@ class Orders(Frame):
     def on_delete_click(self):
         target = self.ent_search.get()
         if len(target) > 0:
-            self.update_table(self.dba.delete_orders(target))
+            self.dba.delete_orders(target)
         else:
             self.dba.error("Incorrect delete data")
 
@@ -85,7 +84,7 @@ class Orders(Frame):
         room_id = self.ent_room.get()
         nights = self.ent_nights.get()
         if len(room_id) > 0 and len(nights) > 0:
-            self.update_table(self.dba.add_orders(room_id, int(nights)))
+            self.dba.add_orders(room_id, int(nights))
         else:
             self.dba.error("Incorrect data")
 

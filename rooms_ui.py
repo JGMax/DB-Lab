@@ -11,7 +11,7 @@ class Rooms(Frame):
         self.btn_clear = Button(self, text="Clear table", command=self.on_clear_table_click)
         self.btn_clear.pack(side=RIGHT, pady=5, padx=10)
 
-        self.btn_show = Button(self, text="Show table", command=self.on_show_table_click)
+        self.btn_show = Button(self, text="Refresh table", command=self.on_show_table_click)
         self.btn_show.pack(side=RIGHT, pady=5, padx=10)
 
         self.table = Table(self, dba.rooms_headings)
@@ -53,20 +53,19 @@ class Rooms(Frame):
         self.update_table(self.dba.get_rooms())
 
     def delete_item(self, id):
-        self.update_table(self.dba.delete_item_room(id))
+        self.dba.delete_item_room(id)
 
     def edit_item(self, type, values):
         self.dba.edit(type, values, self)
 
     def update_item(self, new_values):
-        self.update_table(self.dba.update_values_room(new_values))
+        self.dba.update_values_room(new_values)
 
     def update_table(self, data):
-        if data is not None:
-            self.table.update_table(data)
+        self.table.update_table(data)
 
     def on_clear_table_click(self):
-        self.update_table(self.dba.clear_rooms())
+        self.dba.clear_rooms()
 
     def on_search_click(self):
         target = self.ent_search.get()
@@ -78,7 +77,7 @@ class Rooms(Frame):
     def on_delete_click(self):
         target = self.ent_search.get()
         if 0 < len(target) <= 4:
-            self.update_table(self.dba.delete_room(target))
+            self.dba.delete_room(target)
         else:
             self.dba.error("Incorrect delete data")
 
@@ -86,6 +85,6 @@ class Rooms(Frame):
         room = self.ent_room.get()
         price = self.ent_price.get()
         if 0 < len(room) <= 4 and len(price) > 0:
-            self.update_table(self.dba.add_room(room, int(price)))
+            self.dba.add_room(room, int(price))
         else:
             self.dba.error("Incorrect data")

@@ -42,6 +42,8 @@ class App(Tk):
         self.db.drop()
         self.btn_connection["text"] = "Connect"
         self.db = None
+        self.rooms.update_table(None)
+        self.orders.update_table(None)
 
     def on_clear_all_click(self):
         if self.db is None:
@@ -70,6 +72,8 @@ class App(Tk):
         if self.db is not None:
             self.db.disconnect()
             self.db = None
+            self.rooms.update_table(None)
+            self.orders.update_table(None)
 
     def connect(self, host, name, port, login, password, s_file):
         if host == '' or name == '' or port == '' or login == '' or password == '':
@@ -113,22 +117,23 @@ class App(Tk):
     def clear_rooms(self):
         if self.db is not None:
             try:
-                return self.db.clear_rooms()
+                self.db.clear_rooms()
+                self.rooms.update_table(self.db.get_rooms())
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
             self.error("Database is disconnected")
-            return None
 
     def clear_orders(self):
         if self.db is not None:
             try:
-                return self.db.clear_orders()
+                self.db.clear_orders()
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
             self.error("Database is disconnected")
-            return None
 
     def search_room(self, target):
         if self.db is not None:
@@ -153,7 +158,9 @@ class App(Tk):
     def delete_room(self, target):
         if self.db is not None:
             try:
-                return self.db.search_room(target)
+                self.db.delete_room(target)
+                self.rooms.update_table(self.db.get_rooms())
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -163,7 +170,8 @@ class App(Tk):
     def delete_orders(self, target):
         if self.db is not None:
             try:
-                return self.db.delete_orders(target)
+                self.db.delete_orders(target)
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -173,7 +181,8 @@ class App(Tk):
     def add_room(self, room, price):
         if self.db is not None:
             try:
-                return self.db.add_room(room, price)
+                self.db.add_room(room, price)
+                self.rooms.update_table(self.db.get_rooms())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -183,7 +192,8 @@ class App(Tk):
     def add_orders(self, room_id, night_count):
         if self.db is not None:
             try:
-                return self.db.add_orders(room_id, night_count)
+                self.db.add_orders(room_id, night_count)
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -193,7 +203,9 @@ class App(Tk):
     def delete_item_room(self, id):
         if self.db is not None:
             try:
-                return self.db.delete_item_room(id)
+                self.db.delete_item_room(id)
+                self.rooms.update_table(self.db.get_rooms())
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -203,7 +215,8 @@ class App(Tk):
     def delete_item_orders(self, id):
         if self.db is not None:
             try:
-                return self.db.delete_item_orders(id)
+                self.db.delete_item_orders(id)
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -221,7 +234,9 @@ class App(Tk):
     def update_values_room(self, new_values):
         if self.db is not None:
             try:
-                return self.db.update_item_room(new_values)
+                self.db.update_item_room(new_values)
+                self.rooms.update_table(self.db.get_rooms())
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:
@@ -231,7 +246,8 @@ class App(Tk):
     def update_values_orders(self, new_values):
         if self.db is not None:
             try:
-                return self.db.update_item_orders(new_values)
+                self.db.update_item_orders(new_values)
+                self.orders.update_table(self.db.get_orders())
             except Exception as e:
                 self.error(str(e))
         else:

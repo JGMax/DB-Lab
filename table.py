@@ -49,5 +49,6 @@ class Table:
 
     def update_table(self, data):
         self.table.delete(*self.table.get_children())
-        for i, val in enumerate(data):
-            self.table.insert('', END, values=tuple(val.values()))
+        if data:
+            for i, val in enumerate(data):
+                self.table.insert('', END, values=tuple(val.values()))

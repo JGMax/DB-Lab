@@ -27,9 +27,11 @@ class Database:
         cursor = connection.cursor()
         cursor.execute("SELECT 1 FROM pg_catalog.pg_database WHERE datname = %s", (self.name, ))
         if not cursor.fetchone():
+            self.test_file()
             cursor.execute(sql.SQL("CREATE DATABASE {}").format(sql.Identifier(self.name)))
             connection.close()
             self.connect()
+            self.init_structure()
         else:
             connection.close()
             self.connect()
@@ -40,12 +42,7 @@ class Database:
         self.cursor = self.connection.cursor()
 
     def test_file(self):
-        try:
-            with open(self.structure_file, encoding='utf-8'):
-                return True
-        except IOError as e:
-            print(str(e))
-            return False
+       open(self.structure_file, encoding='utf-8')
 
     def init_structure(self):
         with open(self.structure_file, encoding='utf-8') as f:
@@ -68,61 +65,67 @@ class Database:
         del self
 
     def clear_all(self):
-        print("Clear all")
-        return None
+        self.cursor.callproc("clear_all_tables")
 
     def get_rooms(self):
         self.cursor.callproc("get_rooms")
-        return json.loads(str(self.cursor.fetchone()[0]).replace("'", '"'))
+        fetch = self.cursor.fetchone()[0]
+        if fetch is not None:
+            return json.loads(str(fetch).replace("'", '"'))
 
     def clear_rooms(self):
-        print("Clear room")
-        return None
+        self.cursor.callproc("clear_all_tables")
 
     def search_room(self, target):
-        print("Search room " + target)
-        return None
+        self.cursor.callproc("get_rooms_by_room", (target, ))
+        fetch = self.cursor.fetchone()[0]
+        if fetch is not None:
+            return json.loads(str(fetch).replace("'", '"'))
 
     def delete_room(self, target):
-        print("Delete room " + target)
-        return None
+        self.cursor.callproc("delete_rooms_by_room", (target, ))
 
     def add_room(self, room, night_cost):
-        print("Add room " + room + " " + str(night_cost))
-        return None
+        self.cursor.callproc("add_room", (room, night_cost, ))
 
     def update_item_room(self, new_data):
-        print("Item updated room " + str(new_data))
-        return None
+        id = new_data["id"]
+        room_number = new_data["room_number"]
+        night_cost = new_data["night_cost"]
+        self.cursor.callproc("update_room", (id, room_number, night_cost, ))
 
     def delete_item_room(self, id):
-        print("delete item room " + id)
-        return None
+        self.cursor.callproc("delete_rooms_by_id", (id, ))
 
     def get_orders(self):
         self.cursor.callproc("get_orders")
-        return json.loads(str(self.cursor.fetchone()[0]).replace("'", '"'))
+        fetch = self.cursor.fetchone()[0]
+        if fetch is not None:
+            return json.loads(str(fetch).replace("'", '"'))
 
     def clear_orders(self):
         print("Clear orders")
         return None
 
     def search_orders(self, target):
-        print("Search orders " + target)
-        return None
+        self.cursor.callproc("get_orders_by_room", (target, ))
+        fetch = self.cursor.fetchone()[0]
+        if fetch is not None:
+            return json.loads(str(fetch).replace("'", '"'))
 
     def delete_orders(self, target):
         print("Delete orders " + target)
         return None
 
     def add_orders(self, room_id, nights):
-        print("Add orders " + room_id + " " + str(nights))
-        return None
+        self.cursor.callproc("add_order", (room_id, nights, ))
 
     def update_item_orders(self, new_data):
-        print("Item updated orders " + str(new_data))
-        return None
+        id = new_data["id"]
+        room_id = new_data["room_id"]
+        night_count = new_data["night_count"]
+        arrival_time = new_data["arrival_time"]
+        self.cursor.callproc("update_order", (int(id), int(room_id), arrival_time, int(night_count), ))
 
     def delete_item_orders(self, id):
-        print("delete item orders " + id)
-        return None
+        self.cursor.callproc("delete_orders_by_id", (id, ))
