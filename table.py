@@ -39,10 +39,12 @@ class Table:
             self.popup.grab_release()
 
     def delete(self):
-        self.parent.delete_item(self.popup.selection["id"])
+        if self.popup.selection:
+            self.parent.delete_item(self.popup.selection["id"])
 
     def edit(self, *args):
-        self.parent.edit_item(self.selection.get(), self.popup.selection)
+        if self.popup.selection:
+            self.parent.edit_item(self.selection.get(), self.popup.selection)
 
     def pack(self, *args, **kwargs):
         self.table.pack(*args, **kwargs)
